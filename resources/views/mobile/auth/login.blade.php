@@ -55,7 +55,7 @@
 </div>
 
 @push('scripts')
-<script>
+{{-- <script>
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -95,6 +95,6 @@ if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.
         window.location.href = "{{ route('mobile.dashboard') }}";
     }
 }
-</script>
+</script> --}}
 @endpush
 @endsection
