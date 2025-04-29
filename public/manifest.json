@@ -1,0 +1,28 @@
+{
+    "name": "Absen DitLantas",
+    "short_name": "Absen DitLantas",
+    "description": "Aplikasi Absensi DitLantas Polda Sultra",
+    "start_url": "/mobile/dashboard?standalone=true",
+    "display": "standalone",
+    "background_color": "#1e3a8a",
+    "theme_color": "#1e3a8a",
+    "orientation": "portrait",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "prefer_related_applications": false,
+    "categories": ["utilities", "productivity"],
+    "shortcuts": [
+        {
+            "name": "Dashboard",
+            "url": "/mobile/dashboard",
+            "description": "Buka Dashboard"
+        }
+    ]
+}

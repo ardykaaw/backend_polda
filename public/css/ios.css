@@ -1,0 +1,27 @@
+/* iOS specific styles */
+@supports (-webkit-touch-callout: none) {
+    body {
+        /* Prevent overscroll bounce */
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .content-wrapper {
+        /* Enable scrolling within content */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        height: 100%;
+        /* Account for safe areas */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Hide Safari UI in standalone mode */
+@media all and (display-mode: standalone) {
+    header {
+        padding-top: env(safe-area-inset-top);
+    }
+}
