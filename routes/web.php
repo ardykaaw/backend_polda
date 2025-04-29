@@ -8,6 +8,7 @@ use App\Http\Controllers\Mobile\DashboardController;
 use App\Http\Controllers\Mobile\ProfileController;
 use App\Http\Controllers\Mobile\ScheduleController;
 use App\Http\Controllers\Mobile\AttendanceController;
+use Illuminate\Support\Facades\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +71,19 @@ Route::group(['prefix' => 'mobile', 'as' => 'mobile.'], function () {
 // Root redirect
 Route::get('/', function () {
     return redirect()->route('mobile.login');
+});
+
+// Fallback untuk route yang tidak ditemukan
+Route::fallback(function () {
+    $uri = Request::path();
+    if (str_starts_with($uri, 'admin')) {
+        // Jika akses ke admin, redirect ke login admin
+        return redirect()->route('admin.login')->with('error', 'Silakan login kembali.');
+    } elseif (str_starts_with($uri, 'mobile')) {
+        // Jika akses ke mobile, redirect ke login mobile
+        return redirect()->route('mobile.login')->with('error', 'Silakan login kembali.');
+    } else {
+        // Default ke login mobile
+        return redirect()->route('mobile.login')->with('error', 'Silakan login kembali.');
+    }
 });

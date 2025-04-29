@@ -85,6 +85,11 @@
     const installButton = document.getElementById('installButton');
     const installInstructions = document.getElementById('installInstructions');
 
+    // Redirect ke login jika sudah dalam mode standalone (PWA/iOS)
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        window.location.href = "{{ route('mobile.login') }}";
+    }
+
     // Cek apakah PWA sudah terinstall
     const isPWAInstalled = () => {
         return window.matchMedia('(display-mode: standalone)').matches ||

@@ -7,7 +7,7 @@
             <div class="flex justify-center items-center gap-4 mb-6">
                 <img src="{{ asset('logo.png') }}" alt="Logo Ditlantas" class="w-40 h-40 object-contain">
             </div>
-            <h2 class="text-2xl font-bold text-blue-900">POA SULTRA</h2>
+            <h2 class="text-2xl font-bold text-blue-900">POLDA SULTRA</h2>
         </div>
 
         <form method="POST" action="{{ route('mobile.authenticate') }}" class="space-y-6 w-full max-w-md mx-auto" id="loginForm">
