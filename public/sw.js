@@ -1,6 +1,8 @@
 const CACHE_NAME = 'absen-ditlantas-v1';
 const urlsToCache = [
     '/',
+    '/mobile/login',
+    '/mobile/install',
     '/mobile/dashboard',
     '/mobile/profile',
     '/mobile/schedule',
@@ -27,26 +29,24 @@ self.addEventListener('fetch', event => {
                 if (response) {
                     return response;
                 }
-
                 // Clone the request because it can only be used once
                 const fetchRequest = event.request.clone();
-
                 // Make network request and cache the response
                 return fetch(fetchRequest).then(response => {
                     // Check if valid response
                     if (!response || response.status !== 200 || response.type !== 'basic') {
                         return response;
                     }
-
                     // Clone the response because it can only be used once
                     const responseToCache = response.clone();
-
                     caches.open(CACHE_NAME)
                         .then(cache => {
                             cache.put(event.request, responseToCache);
                         });
-
                     return response;
+                }).catch(() => {
+                    // Fallback ke halaman login jika offline atau gagal fetch
+                    return caches.match('/mobile/login');
                 });
             })
     );
@@ -64,15 +64,5 @@ self.addEventListener('activate', event => {
                 })
             );
         })
-    );
-});
-
-// Handle standalone mode navigation
-self.addEventListener('navigate', event => {
-    event.respondWith(
-        fetch(event.request)
-            .catch(() => {
-                return caches.match(event.request);
-            })
     );
 });

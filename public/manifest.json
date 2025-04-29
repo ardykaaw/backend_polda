@@ -2,7 +2,7 @@
     "name": "Absen DitLantas",
     "short_name": "Absen DitLantas",
     "description": "Aplikasi Absensi DitLantas Polda Sultra",
-    "start_url": "/mobile/dashboard?standalone=true",
+    "start_url": "/mobile/login",
     "display": "standalone",
     "background_color": "#1e3a8a",
     "theme_color": "#1e3a8a",

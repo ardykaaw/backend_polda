@@ -63,6 +63,10 @@
                 </ol>
             </div>
             @endif
+
+            <div class="alert alert-info mt-4">
+                <b>Tips:</b> Untuk pengalaman terbaik, tambahkan aplikasi ke Home Screen dari halaman <b>login</b>, bukan dari halaman install.
+            </div>
         </div>
     </div>
 </div>
