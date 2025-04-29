@@ -8,9 +8,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
-        body {
-            background-color: #f8fafc;
-        }
+        
         
         .sidebar {
             background-color: white;
@@ -86,30 +84,18 @@
 </head>
 <body>
     @auth
-    <div class="flex min-h-screen">
-        @include('admin.layouts.sidebar')
+   
+        
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Top Bar -->
-            <div class="bg-white shadow-sm">
-                <div class="flex justify-between items-center px-8 py-4">
-                    <h2 class="text-xl font-semibold text-gray-800">@yield('title')</h2>
-                    <div class="flex items-center space-x-4">
-                        <span class="text-gray-600 flex items-center">
-                            <i class="fas fa-user-circle text-lg mr-2"></i>
-                            {{ Auth::user()->nama }}
-                        </span>
-                    </div>
-                </div>
-            </div>
+       
+         
 
             <!-- Page Content -->
             <div class="p-8">
                 @yield('content')
             </div>
-        </div>
-    </div>
+        
+    
     @else
         @yield('content')
     @endauth

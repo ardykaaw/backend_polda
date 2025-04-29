@@ -12,9 +12,13 @@ use Illuminate\Support\Facades\Request;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routesppp
 |--------------------------------------------------------------------------
 */
+
+Route::get('/', function () {
+    return redirect()->route('mobile.login');
+});
 
 // Admin Panel Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
@@ -35,6 +39,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::put('users/{user}', [UserController::class, 'update'])->name('users.update');
         Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::post('logout', [AdminController::class, 'logout'])->name('logout');
+
     });
 });
 
@@ -57,6 +62,7 @@ Route::group(['prefix' => 'mobile', 'as' => 'mobile.'], function () {
         Route::get('profile', [ProfileController::class, 'index'])->name('profile');
         Route::get('schedule', [ScheduleController::class, 'index'])->name('schedule');
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+
         
         // Attendance Routes
         Route::prefix('attendance')->name('attendance.')->group(function () {

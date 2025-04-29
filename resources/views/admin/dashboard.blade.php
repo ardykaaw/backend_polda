@@ -2,6 +2,8 @@
 
 @section('title', 'Dashboard')
 
+@include('admin.layouts.sidebar')
+
 @section('content')
 <div class="space-y-6">
     <!-- Welcome Section -->
