@@ -380,9 +380,9 @@ async function openCamera(type, position) {
                 audio: false
             });
             video.srcObject = videoStream;
-            // Tidak mirror untuk kamera depan
+            // Mirror untuk kamera depan, normal untuk kamera belakang
             if (facingMode === 'user') {
-                video.style.transform = 'scaleX(1)';
+                video.style.transform = 'scaleX(-1)';
             } else {
                 video.style.transform = 'scaleX(1)';
             }
@@ -453,6 +453,9 @@ async function openCamera(type, position) {
 
     // Handle close button click
     closeButton.onclick = cleanup;
+
+    // Pada openCamera, simpan facingMode terakhir ke window.lastFacingMode
+    window.lastFacingMode = facingMode;
 }
 
 function updateUI(type, data) {
@@ -461,11 +464,18 @@ function updateUI(type, data) {
     // Update photo card
     const photoCard = document.querySelector(type === 'check-in' ? '#check-in-card' : '#check-out-card');
     if (photoCard) {
+        // Deteksi apakah foto dari kamera depan (user) atau belakang (environment)
+        // Asumsi: jika type check-in/check-out, kita bisa simpan info facingMode di data.photo_facing_mode jika backend mengirimkannya
+        // Namun, jika tidak ada, kita asumsikan check-in dan check-out bisa dari kamera depan atau belakang
+        // Untuk konsistensi, kita mirror jika facingMode terakhir adalah 'user'
+        let lastFacingMode = window.lastFacingMode || 'environment';
+        let imgTransform = (lastFacingMode === 'user') ? 'scaleX(-1)' : 'scaleX(1)';
         photoCard.innerHTML = `
             <div class="w-full h-full rounded-xl overflow-hidden relative">
                 <img src="/storage/${data.photo_url}" 
                      alt="${type === 'check-in' ? 'Check In' : 'Check Out'}" 
                      class="w-full h-full object-cover"
+                     style="transform: ${imgTransform};"
                      onerror="this.src='{{ asset('images/default-avatar.png') }}'">
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-2">
                     <p class="text-white text-sm text-center font-medium">
