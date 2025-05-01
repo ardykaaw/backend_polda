@@ -3,7 +3,7 @@
 @section('title', 'Login')
 
 @section('content')
-<div class="flex items-center justify-center min-h-screen bg-gray-100 w-full h-full ">
+<div class="flex items-center justify-center min-h-screen ">
     <div class="bg-white p-8 rounded-xl shadow-2xl w-[400px]">
         <div class="flex flex-col items-center mb-8">
             <img src="{{ asset('logo.png') }}" alt="Logo Polda" class="w-32 mb-4">

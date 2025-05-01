@@ -380,6 +380,12 @@ async function openCamera(type, position) {
                 audio: false
             });
             video.srcObject = videoStream;
+            // Tidak mirror untuk kamera depan
+            if (facingMode === 'user') {
+                video.style.transform = 'scaleX(1)';
+            } else {
+                video.style.transform = 'scaleX(1)';
+            }
         } catch (error) {
             console.error('Camera error:', error);
             alert('Error: ' + error.message);
