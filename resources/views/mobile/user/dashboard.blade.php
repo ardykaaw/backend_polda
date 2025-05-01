@@ -272,6 +272,9 @@ async function openCamera(type, position) {
     // Cleanup any existing camera UI first
     cleanup();
 
+    // Camera facing mode state
+    let facingMode = 'environment';
+
     // Create camera UI
     const cameraUI = document.createElement('div');
     currentCameraUI = cameraUI; // Store reference to current UI
@@ -322,6 +325,23 @@ async function openCamera(type, position) {
         border: 3px solid #666;
     `;
 
+    // Create switch camera button
+    const switchButton = document.createElement('button');
+    switchButton.style.cssText = `
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #eee;
+        border: 2px solid #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #333;
+    `;
+    switchButton.title = 'Ganti Kamera';
+    switchButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+
     // Create close button
     const closeButton = document.createElement('button');
     closeButton.style.cssText = `
@@ -342,77 +362,91 @@ async function openCamera(type, position) {
     closeButton.innerHTML = '×';
 
     // Append elements
+    buttonContainer.appendChild(switchButton);
     buttonContainer.appendChild(captureButton);
     cameraUI.appendChild(video);
     cameraUI.appendChild(buttonContainer);
     cameraUI.appendChild(closeButton);
     document.body.appendChild(cameraUI);
 
-    try {
-        // Request camera access
-        videoStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment' },
-            audio: false
-        });
-        video.srcObject = videoStream;
-
-        // Handle capture button click
-        captureButton.onclick = async () => {
-            try {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
-                
-                const formData = new FormData();
-                formData.append('photo', blob, 'photo.jpg');
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('latitude', position.latitude);
-                formData.append('longitude', position.longitude);
-
-                captureButton.disabled = true;
-                captureButton.style.opacity = '0.5';
-
-                const endpoint = type === 'check-in' ? 
-                    '{{ route("mobile.attendance.check-in") }}' : 
-                    '{{ route("mobile.attendance.check-out") }}';
-
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
-
-                const result = await response.json();
-                console.log('Server response:', result);
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Gagal mengunggah foto');
-                }
-
-                // Update UI
-                updateUI(type, result.data);
-                cleanup();
-
-            } catch (error) {
-                console.error('Capture error:', error);
-                alert('Error: ' + error.message);
-                cleanup();
-            }
-        };
-
-        // Handle close button click
-        closeButton.onclick = cleanup;
-
-    } catch (error) {
-        console.error('Camera error:', error);
-        alert('Error: ' + error.message);
-        cleanup();
+    // Camera stream logic
+    async function startCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+        }
+        try {
+            videoStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: facingMode },
+                audio: false
+            });
+            video.srcObject = videoStream;
+        } catch (error) {
+            console.error('Camera error:', error);
+            alert('Error: ' + error.message);
+            cleanup();
+        }
     }
+
+    // Initial camera start
+    await startCamera();
+
+    // Handle switch camera button click
+    switchButton.onclick = async () => {
+        facingMode = (facingMode === 'environment') ? 'user' : 'environment';
+        await startCamera();
+    };
+
+    // Handle capture button click
+    captureButton.onclick = async () => {
+        try {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
+            
+            const formData = new FormData();
+            formData.append('photo', blob, 'photo.jpg');
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('latitude', position.latitude);
+            formData.append('longitude', position.longitude);
+
+            captureButton.disabled = true;
+            captureButton.style.opacity = '0.5';
+
+            const endpoint = type === 'check-in' ? 
+                '{{ route("mobile.attendance.check-in") }}' : 
+                '{{ route("mobile.attendance.check-out") }}';
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+            console.log('Server response:', result);
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Gagal mengunggah foto');
+            }
+
+            // Update UI
+            updateUI(type, result.data);
+            cleanup();
+
+        } catch (error) {
+            console.error('Capture error:', error);
+            alert('Error: ' + error.message);
+            cleanup();
+        }
+    };
+
+    // Handle close button click
+    closeButton.onclick = cleanup;
 }
 
 function updateUI(type, data) {
