@@ -226,9 +226,10 @@
                 <header class="app-header">
                     <!-- Main container with three columns -->
                     <div class="w-full px-4 flex justify-between items-center">
-                        <!-- Left spacer -->
-                        <div class="w-10"></div>
-                        
+                        <!-- Left: Notification Icon -->
+                        <a href="#" class="w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-bell text-xl text-white"></i>
+                        </a>
                         <!-- Center: Logo and Text -->
                         <div class="logo-container">
                             <img src="{{ asset('logo.png') }}" 
@@ -240,7 +241,6 @@
                                 <span class="brand-text-secondary">POLDA SULTRA</span>
                             </div>
                         </div>
-
                         <!-- Right: Profile Image -->
                         <a href="{{ route('mobile.profile') }}" class="w-10 h-10 flex items-center justify-center">
                             @if(auth()->user()->profile_image)
